@@ -9,11 +9,12 @@
 #include "cppsl.h"
 
 #include <ctime>
+#if defined(LOG_TO_PERSISTENCE)
+#include <fstream>
+#endif // LOG_TO_PERSISTENCE
+#include <fmt/format.h>
 #include <iomanip>
 #include <iostream>
-#include <fstream>
-#include <fmt/format.h>
-#include <memory>
 
 auto raw_time{std::time(nullptr)};
 
@@ -22,9 +23,25 @@ auto raw_time{std::time(nullptr)};
 
 namespace
 {
+    std::string log_level_to_string(cppsl::eLogLevel const& logLevel)
+    {
+        switch (logLevel) {
+            case cppsl::eLogLevel::DEBUG:
+                return "[DEBUG]: ";
+            case cppsl::eLogLevel::ERROR:
+                return "[ERROR]: ";
+            case cppsl::eLogLevel::INFO:
+                return "[INFO]: ";
+            case cppsl::eLogLevel::WARNING:
+                [[fallthrough]];
+            default:
+                return "[WARNING]: ";
+        }
+    }
+
     struct logger
     {
-#if defined(LOG_TO_PERSITANCY)
+#if defined(LOG_TO_PERSISTENCE)
         explicit logger(std::string logger_file_path)
             : _logger_file(std::ofstream(std::move(logger_file_path)))
         {
@@ -33,45 +50,47 @@ namespace
                 throw std::runtime_error("Failed to init log file " + logger_file_path);
             }
         }
-#endif // LOG_TO_PERSITANCY
-        void log_message(std::string msg)
+#endif // LOG_TO_PERSISTENCE
+
+        void log_message(std::string const &log_level, std::string const& formated_message)
         {
-#if defined(LOG_TO_PERSITANCY)
-            _logger_file << LOG_PREFIX << msg << std::endl;
+#if defined(LOG_TO_PERSISTENCE)
+            _logger_file << LOG_PREFIX << log_level << formated_message << std::endl;
 #else
-            std::cout << LOG_PREFIX << msg << std::endl;
-#endif // LOG_TO_PERSITANCY
+            std::cout << LOG_PREFIX << log_level << formated_message << std::endl;
+#endif // LOG_TO_PERSISTENCE
         }
-#if defined(LOG_TO_PERSITANCY)
+#if defined(LOG_TO_PERSISTENCE)
         std::ofstream _logger_file;
-#endif // LOG_TO_PERSITANCY
+#endif // LOG_TO_PERSISTENCE
     };
 
-    static std::unique_ptr<logger> _logger;
+    std::unique_ptr<logger> _logger;
 } // namespace
 
-#if defined(LOG_TO_PERSITANCY)
+#if defined(LOG_TO_PERSISTENCE)
 void cppsl::init_logger(std::string logger_file_path = "/tmp/out.log")
 #else
 void cppsl::init_logger()
-#endif // LOG_TO_PERSITANCY
+#endif // LOG_TO_PERSISTENCE
 {
     if (!_logger)
     {
-#if defined(LOG_TO_PERSITANCY)
+#if defined(LOG_TO_PERSISTENCE)
         _logger = std::make_unique<logger>(std::move(logger_file_path));
 #else
         _logger = std::make_unique<logger>();
-#endif // LOG_TO_PERSITANCY
+#endif // LOG_TO_PERSISTENCE
     }
-    LOG_DEBUG("Logger initialized successfully");
+    LOG_DEBUG("Logger initialized successfully")
 }
 
-void cppsl::_log(std::string msg)
+void cppsl::_log(cppsl::eLogLevel const& logLevel, std::string const &message)
 {
     if (!_logger)
     {
         throw std::runtime_error("Logger not initialized");
     }
-    _logger->log_message(std::move(msg));
+//    auto const formated_message{fmt::format(message, fmt::make_format_args(args...))};
+    _logger->log_message(log_level_to_string(logLevel), message);
 }
