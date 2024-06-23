@@ -2,7 +2,7 @@ find_package(GTest REQUIRED)
 
 enable_testing()
 
-set(UNIT_TEST_NAME ${CMAKE_PROJECT_NAME}_ut)
+set(UNIT_TEST_NAME cppsl_ut)
 
 add_executable(
         ${UNIT_TEST_NAME}
@@ -11,7 +11,7 @@ add_executable(
 target_link_libraries(
         ${UNIT_TEST_NAME}
         GTest::gtest_main
-        ${CMAKE_PROJECT_NAME}
+        cppsl
 )
 
 if(${LOG_TO_PERSISTENCE})
