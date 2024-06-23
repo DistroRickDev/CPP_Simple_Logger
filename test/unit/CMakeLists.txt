@@ -19,7 +19,7 @@ if(${LOG_TO_PERSISTENCE})
 endif()
 
 link_directories(${CMAKE_BINARY_DIR}/src)
-target_include_directories(${UNIT_TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(${UNIT_TEST_NAME} PRIVATE ${_CPPSL_INCLUDE_DIR})
 
 include(GoogleTest)
 gtest_discover_tests(${UNIT_TEST_NAME})
