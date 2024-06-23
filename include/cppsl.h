@@ -59,7 +59,7 @@ auto format_message(std::string const& fmt, auto&& ...s) -> std::string
 }
 
 #if  defined(LOG_TO_PERSISTENCE)
-    void init_logger(std::string logger_file_path);
+    void init_logger(std::string const& logger_file_path = "/tmp/cppsl.log");
 #endif // LOG_TO_PERSISTENCE
 
     void init_logger();
