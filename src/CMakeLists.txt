@@ -5,4 +5,4 @@ if(${LOG_TO_PERSISTENCE})
     add_compile_definitions(LOG_TO_PERSISTENCE)
 endif()
 
-target_include_directories(cppsl PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(cppsl PRIVATE ${_CPPSL_INCLUDE_DIR})
