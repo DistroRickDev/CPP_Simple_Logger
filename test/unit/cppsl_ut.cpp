@@ -56,6 +56,7 @@ TEST(CPPSL, test_log_debug_happy_path)
     EXPECT_THAT(result, testing::HasSubstr("Hello World"));
 }
 #endif // !NDEBUG
+
 TEST(CPPSL, test_log_error_happy_path)
 {
     cppsl::init_logger();

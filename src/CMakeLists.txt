@@ -5,5 +5,4 @@ if(${LOG_TO_PERSISTENCE})
     add_compile_definitions(LOG_TO_PERSISTENCE)
 endif()
 
-target_link_libraries(${CMAKE_PROJECT_NAME} INTERFACE fmt)
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)

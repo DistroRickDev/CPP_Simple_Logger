@@ -82,7 +82,7 @@ void cppsl::init_logger()
         _logger = std::make_unique<logger>();
 #endif // LOG_TO_PERSISTENCE
     }
-    LOG_DEBUG("Logger initialized successfully")
+    LOG_DEBUG("Logger initialized successfully: {}", 1);
 }
 
 void cppsl::_log(cppsl::eLogLevel const& logLevel, std::string const &message)
