@@ -22,8 +22,13 @@ namespace cppsl {
         WARNING
     };
 
+auto format_message(std::string const& fmt) -> std::string {return fmt;}
 auto format_message(std::string const& fmt, auto&& ...s) -> std::string
 {
+    if(fmt.find("{}") == std::string::npos)
+    {
+        throw std::runtime_error("No formater in string");
+    }
     std::vector<std::string> arguments;
     for(const auto &p : {s...}) {
         if(std::is_convertible<decltype(p), std::string>::value)
