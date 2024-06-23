@@ -42,8 +42,8 @@ namespace
     struct logger
     {
 #if defined(LOG_TO_PERSISTENCE)
-        explicit logger(std::string logger_file_path)
-            : _logger_file(std::ofstream(std::move(logger_file_path)))
+        explicit logger(const std::string& logger_file_path)
+            : _logger_file(std::ofstream(logger_file_path))
         {
             if (!_logger_file.good())
             {
@@ -69,7 +69,7 @@ namespace
 } // namespace
 
 #if defined(LOG_TO_PERSISTENCE)
-void cppsl::init_logger(std::string logger_file_path = "/tmp/out.log")
+void cppsl::init_logger(std::string const& logger_file_path )
 #else
 void cppsl::init_logger()
 #endif // LOG_TO_PERSISTENCE
@@ -77,7 +77,7 @@ void cppsl::init_logger()
     if (!_logger)
     {
 #if defined(LOG_TO_PERSISTENCE)
-        _logger = std::make_unique<logger>(std::move(logger_file_path));
+        _logger = std::make_unique<logger>(logger_file_path);
 #else
         _logger = std::make_unique<logger>();
 #endif // LOG_TO_PERSISTENCE
